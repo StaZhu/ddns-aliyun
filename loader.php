@@ -1,6 +1,6 @@
 <?php
+
 require_once dirname(__FILE__).'/ddns.php';
-use DDNS\MyDDNS;
 
 $accessKeyId     = '你的Access Key ID';         //设置你的阿里云accessKeyId,用于调用api
 $accessKeySecret = '你的Access Key Secret';     //设置你的阿里云accessKeySecret,用于调用api

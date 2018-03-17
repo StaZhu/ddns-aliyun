@@ -1,5 +1,4 @@
 <?php
-namespace DDNS;
 
 class MyDDNS
 {
