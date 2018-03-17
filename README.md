@@ -8,7 +8,7 @@ ddns-aliyun 是一个基于php，阿里云api的动态域名服务程序，只�
 
 # 下载
 
-```git clone ```
+```git clone https://github.com/StaZhu/ddns-aliyun.git ```
 
 # 修改参数
 
