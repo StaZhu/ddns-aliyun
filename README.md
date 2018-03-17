@@ -27,7 +27,7 @@ php loader.php
 crontab -e
 ```
 
-请按照  `*/10 * * * * /usr/local/bin/php /path/to/your/loader.php &> /dev/null` 格式设定
+请按照  `*/10 * * * * /usr/local/bin/php /path/to/your/loader.php &> /dev/null` 格式设定。
 
 开头部分  `*/10`代表每十分钟执行一次脚本，如果你的ttl设置为600，请保持当前参数，如果ttl设置为120，则可改为 `*/2` ，依次类推。
 
