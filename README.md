@@ -4,7 +4,28 @@ ddns-aliyun 是一个基于php，阿里云api的动态域名服务程序，只�
 
 # 如何使用
 
-环境要求：ddns-aliyun 需要php环境,可使用mac 默认自带php7.1.3,修改配置文件后方使用。也可使用homebrew 安装最新版php。
+环境要求：ddns-aliyun 需要php环境,已在macOS和OpenWRT测试。
+
+macOS可使用自带php。
+
+亦可使用homebrew 独立安装最新版php。
+
+```
+brew install php
+```
+
+OpenWRT下可使用opkg安装php及相应扩展。
+
+```cd
+opkg install php5
+opkg install php5-cli
+opkg install zoneinfo-core
+opkg install zoneinfo-asia
+opkg install php5-mod-hash
+opkg install php5-mod-json
+```
+
+
 
 # 下载
 
