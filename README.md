@@ -2,9 +2,9 @@
 
 ddns-aliyun 是一个基于php，阿里云api的动态域名服务程序，只适用于macOS下，PPPoE拨号获取到的局域网ip映射。
 
-# 如何使用
+# 环境配置
 
-环境要求：ddns-aliyun 需要php环境,已在macOS和OpenWRT测试。
+ddns-aliyun 需要php-cli环境,已在macOS和OpenWRT测试。
 
 macOS可使用自带php。
 
@@ -42,7 +42,7 @@ cd ddns-aliyun
 php loader.php
 ```
 
-# 设置计划任务
+# 定时运行
 
 ```
 crontab -e
