@@ -80,7 +80,7 @@ class MyDDNS
             'DomainName' => $this->domainName,
             'Format' => 'json',
             'SignatureMethod' => 'HMAC-SHA1',
-            'SignatureNonce' => random_int(1000000000, 9999999999),
+            'SignatureNonce' => rand(1000000000, 9999999999),
             'SignatureVersion' => '1.0',
             'Timestamp' => $this->getDate(),
             'Version' => '2015-01-09'
