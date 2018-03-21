@@ -9,30 +9,30 @@ class MyDDNS
     public $ttl;
     public $prefix;
 
-    function __construct(string $accessKeyId,string $accessKeySecret) {
+    function __construct($accessKeyId, $accessKeySecret) {
         $this->accessKeyId     = $accessKeyId;
         $this->accessKeySecret = $accessKeySecret;
     }
 
-    public function setDomainName(string $domainName) {
+    public function setDomainName($domainName) {
         $this->domainName = $domainName;
     }
 
-    public function setIP(string $ip) {
+    public function setIP($ip) {
         $this->ip = $ip;
     }
 
-    public function setTTL(string $ttl) {
+    public function setTTL($ttl) {
         $this->ttl = $ttl;
     }
 
-    public function setPrefix(string $prefix) {
+    public function setPrefix($prefix) {
         $this->prefix = $prefix;
     }
 
    
 
-    public function sendRequest(): array {
+    public function sendRequest() {
         $queries = [
             'AccessKeyId' => $this->accessKeyId,
             'Action' => 'UpdateDomainRecord',
@@ -40,7 +40,7 @@ class MyDDNS
             'RR' => $this->prefix,
             'RecordId' => $this->getRecordId(),
             'SignatureMethod' => 'HMAC-SHA1',
-            'SignatureNonce' => random_int(1000000000, 9999999999),
+            'SignatureNonce' => rand(1000000000, 9999999999),
             'SignatureVersion' => '1.0',
             'TTL' => $this->ttl,
             'Timestamp' => $this->getDate(),
@@ -52,7 +52,7 @@ class MyDDNS
         return $this->doRequest($queries);
     }
 
-    public function doRequest(Array $queries): array {
+    public function doRequest($queries) {
         $canonicalQueryString = '';
         $i                    = 0;
 
@@ -73,7 +73,7 @@ class MyDDNS
         return json_decode($response, true);
     }
 
-    public function getRecordId(): string {
+    public function getRecordId() {
         $queries = [
             'AccessKeyId' => $this->accessKeyId,
             'Action' => 'DescribeDomainRecords',
@@ -103,19 +103,18 @@ class MyDDNS
         return $prefix['RecordId'];
     }
 
-    public function getDate(): string {
+    public function getDate() {
         date_default_timezone_set('UTC');
 
-        $timestamp = date('U');
-        $date      = date('Y-m-d', $timestamp);
-        $H         = date('H', $timestamp);
-        $i         = date('i', $timestamp);
-        $s         = date('s', $timestamp);
+        $date      = date('Y-m-d');
+        $H         = date('H');
+        $i         = date('i');
+        $s         = date('s');
 
         return "{$date}T{$H}%3A{$i}%3A{$s}";
     }
 
-    public function getSignature(string $CanonicalQueryString): string {
+    public function getSignature($CanonicalQueryString) {
         $HTTPMethod                  = 'GET';
         $slash                       = urlencode('/');
         $EncodedCanonicalQueryString = urlencode($CanonicalQueryString);
