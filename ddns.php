@@ -120,6 +120,7 @@ class MyDDNS
         $EncodedCanonicalQueryString = urlencode($CanonicalQueryString);
         $StringToSign                = "{$HTTPMethod}&{$slash}&{$EncodedCanonicalQueryString}";
         $StringToSign                = str_replace('%40', '%2540', $StringToSign);
+        $StringToSign                = str_replace('%3A', '%253A', $StringToSign);
         $HMAC                        = hash_hmac('sha1', $StringToSign, "{$this->accessKeySecret}&", true);
 
         return base64_encode($HMAC);
