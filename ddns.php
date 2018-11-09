@@ -8,6 +8,7 @@ class MyDDNS
     public $ip;
     public $ttl;
     public $prefix;
+    public $type;
 
     function __construct($accessKeyId, $accessKeySecret) {
         $this->accessKeyId     = $accessKeyId;
@@ -29,6 +30,10 @@ class MyDDNS
     public function setPrefix($prefix) {
         $this->prefix = $prefix;
     }
+    
+    public function setDomainNameType($type) {
+        $this->type = $type;
+    }
 
    
 
@@ -36,7 +41,7 @@ class MyDDNS
         $queries = [
             'AccessKeyId' => $this->accessKeyId,
             'Action' => 'UpdateDomainRecord',
-            'Format' => 'json',
+            'Format' => 'JSON',
             'RR' => $this->prefix,
             'RecordId' => $this->getRecordId(),
             'SignatureMethod' => 'HMAC-SHA1',
@@ -44,7 +49,7 @@ class MyDDNS
             'SignatureVersion' => '1.0',
             'TTL' => $this->ttl,
             'Timestamp' => $this->getDate(),
-            'Type' => 'A',
+            'Type' => $this->type,
             'Value' => $this->ip, 
             'Version' => '2015-01-09'
         ];
@@ -78,7 +83,7 @@ class MyDDNS
             'AccessKeyId' => $this->accessKeyId,
             'Action' => 'DescribeDomainRecords',
             'DomainName' => $this->domainName,
-            'Format' => 'json',
+            'Format' => 'JSON',
             'SignatureMethod' => 'HMAC-SHA1',
             'SignatureNonce' => rand(1000000000, 9999999999),
             'SignatureVersion' => '1.0',
