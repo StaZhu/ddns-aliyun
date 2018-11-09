@@ -35,8 +35,6 @@ class MyDDNS
         $this->type = $type;
     }
 
-   
-
     public function sendRequest() {
         $queries = [
             'AccessKeyId' => $this->accessKeyId,
@@ -130,9 +128,5 @@ class MyDDNS
 
         return base64_encode($HMAC);
     }
-
-    
-
-    
 }
 ?>
