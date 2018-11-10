@@ -1,6 +1,6 @@
 # 简介
 
-ddns-aliyun 是一个基于php，阿里云api的动态域名服务程序，适用于macOS,OpenWRT，PPPoE拨号获取到的局域网ip映射。
+ddns-aliyun 是一个基于php，阿里云api的动态域名服务程序，适用于macOS，OpenWRT等类UNIX环境下，PPPoE拨号获取到的局域网ip映射。
 
 # 环境配置
 
