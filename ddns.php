@@ -94,7 +94,7 @@ class MyDDNS
         $prefix = null;
 
         foreach ($recordList as $key => $record) {
-            if ($this->prefix === $record['RR']) {
+            if ($record['Type'] === $this->type && $this->prefix === $record['RR']) {
                 $prefix = $record;
             }
         }
