@@ -10,13 +10,13 @@ macOS可使用自带php。
 
 亦可使用homebrew 独立安装最新版php。
 
-```
+```bash
 brew install php
 ```
 
 OpenWRT下可使用opkg安装php及相应扩展。
 
-```cd
+```bash
 opkg install php5
 opkg install php5-cli
 opkg install zoneinfo-core
@@ -25,11 +25,11 @@ opkg install php5-mod-hash
 opkg install php5-mod-json
 ```
 
-
-
 # 下载
 
-```git clone https://github.com/StaZhu/ddns-aliyun.git ```
+```bash
+git clone https://github.com/StaZhu/ddns-aliyun.git
+```
 
 # 修改参数
 
@@ -37,14 +37,14 @@ opkg install php5-mod-json
 
 # 测试
 
-```
+```bash
 cd ddns-aliyun
 php loader.php
 ```
 
 # 定时运行
 
-```
+```bash
 crontab -e
 ```
 
