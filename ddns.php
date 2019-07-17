@@ -66,7 +66,7 @@ class MyDDNS
         }
 
         $signature  = $this->getSignature($canonicalQueryString);
-        $requestUrl = "http://dns.aliyuncs.com/?{$canonicalQueryString}&Signature=" . urlencode($signature);
+        $requestUrl = "http://alidns.aliyuncs.com/?{$canonicalQueryString}&Signature=" . urlencode($signature);			//如果服务器在非大陆地区不推荐用dns.aliyuncs.com，因为延时比较高，有的时候导致设置不成功，经过与阿里云沟通，他们提供了新地址。
         $response   = file_get_contents($requestUrl, false, stream_context_create([
             'http' => [
                 'ignore_errors' => true
@@ -74,6 +74,38 @@ class MyDDNS
         ]));
 
         return json_decode($response, true);
+    }
+
+    public function GetRecordValue() {
+        $queries = [
+            'AccessKeyId' => $this->accessKeyId,
+            'Action' => 'DescribeDomainRecords',
+            'DomainName' => $this->domainName,
+            'Format' => 'JSON',
+            'SignatureMethod' => 'HMAC-SHA1',
+            'SignatureNonce' => rand(1000000000, 9999999999),
+            'SignatureVersion' => '1.0',
+            'Timestamp' => $this->getDate(),
+            'Version' => '2015-01-09'
+        ];
+
+        $response = $this->doRequest($queries);
+        $recordList = $response['DomainRecords']['Record'];
+        $prefix = null;
+
+        foreach ($recordList as $key => $record) {
+            if ($record['Type'] === $this->type && $this->prefix === $record['RR']) {
+                $prefix = $record;
+            }
+        }
+
+        if ($prefix === null) {
+            die('prefix ' . $this->prefix . ' not found.');
+        }
+		
+        //print_r($prefix);
+
+        return $prefix['Value'];
     }
 
     public function getRecordId() {
