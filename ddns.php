@@ -56,12 +56,13 @@ class MyDDNS
     }
 
     public function doRequest($queries) {
+        ksort($queries);
         $canonicalQueryString = '';
         $i                    = 0;
 
         foreach ($queries as $param => $query) {
             $canonicalQueryString .= $i === 0 ? null : '&';
-            $canonicalQueryString .= "$param=$query";
+            $canonicalQueryString .= $this->percentEncode($param) . "=" . $this->percentEncode($query);
             $i++;
         }
 
@@ -140,13 +141,16 @@ class MyDDNS
 
     public function getDate() {
         date_default_timezone_set('UTC');
-
-        $date      = date('Y-m-d');
-        $H         = date('H');
-        $i         = date('i');
-        $s         = date('s');
-
-        return "{$date}T{$H}%3A{$i}%3A{$s}";
+        return date('Y-m-d\TH:i:s\Z');
+    }
+    
+    public function percentEncode($str) {
+        //使用urlencode编码后，将"+","*","%7E"做替换即满足ECS API规定的编码规范
+        $res = urlencode($str);
+        $res = preg_replace('/\+/', '%20', $res);
+        $res = preg_replace('/\*/', '%2A', $res);
+        $res = preg_replace('/%7E/', '~', $res);
+        return $res;
     }
 
     public function getSignature($CanonicalQueryString) {
@@ -154,8 +158,8 @@ class MyDDNS
         $slash                       = urlencode('/');
         $EncodedCanonicalQueryString = urlencode($CanonicalQueryString);
         $StringToSign                = "{$HTTPMethod}&{$slash}&{$EncodedCanonicalQueryString}";
-        $StringToSign                = str_replace('%40', '%2540', $StringToSign);
-        $StringToSign                = str_replace('%3A', '%253A', $StringToSign);
+        //$StringToSign                = str_replace('%40', '%2540', $StringToSign);
+        //$StringToSign                = str_replace('%3A', '%253A', $StringToSign);
         $HMAC                        = hash_hmac('sha1', $StringToSign, "{$this->accessKeySecret}&", true);
 
         return base64_encode($HMAC);
