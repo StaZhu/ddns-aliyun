@@ -14,6 +14,7 @@ $updater->setDomainName('你的域名');            //设置二级域名，例�
 $updater->setPrefix('你的前缀');                //设置二级域名的前缀，例：ddns.stazhu.com 中的 ddns
 $updater->setTTL('600');                       //设置TTL值，取决于你购买的云解析服务，TTL越低，DNS缓存更新越快，越佳，默认请设置为600，即10分钟。
 $updater->setDomainNameType('A');              //设置域名类型 IPv4 'A' IPv6 'AAAA'
+$updater->setDomainNameLine('default');        //设置解析线路(isp)：【默认：default | 境外：oversea】
 
 print_r($updater->sendRequest());
 echo "\n";

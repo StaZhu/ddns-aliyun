@@ -9,6 +9,7 @@ class MyDDNS
     public $ttl;
     public $prefix;
     public $type;
+    public $line = "default";       //解析线路(isp)：【默认：default | 境外：oversea】
 
     function __construct($accessKeyId, $accessKeySecret) {
         $this->accessKeyId     = $accessKeyId;
@@ -34,6 +35,10 @@ class MyDDNS
     public function setDomainNameType($type) {
         $this->type = $type;
     }
+    
+    public function setDomainNameLine($line) {
+        $this->line = $line;
+    }
 
     public function sendRequest() {
         $queries = [
@@ -48,6 +53,7 @@ class MyDDNS
             'TTL' => $this->ttl,
             'Timestamp' => $this->getDate(),
             'Type' => $this->type,
+            'Line' => $this->line,
             'Value' => $this->ip, 
             'Version' => '2015-01-09'
         ];
@@ -95,7 +101,7 @@ class MyDDNS
         $prefix = null;
 
         foreach ($recordList as $key => $record) {
-            if ($record['Type'] === $this->type && $this->prefix === $record['RR']) {
+            if ($record['Type'] === $this->type && $record['Line'] === $this->line && $record['RR'] === $this->prefix) {
                 $prefix = $record;
             }
         }
@@ -127,7 +133,7 @@ class MyDDNS
         $prefix = null;
 
         foreach ($recordList as $key => $record) {
-            if ($record['Type'] === $this->type && $this->prefix === $record['RR']) {
+            if ($record['Type'] === $this->type && $record['Line'] === $this->line && $record['RR'] === $this->prefix) {
                 $prefix = $record;
             }
         }
