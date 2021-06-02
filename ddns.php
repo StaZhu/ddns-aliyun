@@ -9,6 +9,7 @@ class MyDDNS
     public $ttl;
     public $prefix;
     public $type;
+    public $line = "default";       //解析线路(isp)：【默认：default | 境外：oversea】
 
     function __construct($accessKeyId, $accessKeySecret) {
         $this->accessKeyId     = $accessKeyId;
@@ -34,6 +35,10 @@ class MyDDNS
     public function setDomainNameType($type) {
         $this->type = $type;
     }
+    
+    public function setDomainNameLine($line) {
+        $this->line = $line;
+    }
 
     public function sendRequest() {
         $queries = [
@@ -48,6 +53,7 @@ class MyDDNS
             'TTL' => $this->ttl,
             'Timestamp' => $this->getDate(),
             'Type' => $this->type,
+            'Line' => $this->line,
             'Value' => $this->ip, 
             'Version' => '2015-01-09'
         ];
@@ -56,12 +62,13 @@ class MyDDNS
     }
 
     public function doRequest($queries) {
+        ksort($queries);
         $canonicalQueryString = '';
         $i                    = 0;
 
         foreach ($queries as $param => $query) {
             $canonicalQueryString .= $i === 0 ? null : '&';
-            $canonicalQueryString .= "$param=$query";
+            $canonicalQueryString .= $this->percentEncode($param) . "=" . $this->percentEncode($query);
             $i++;
         }
 
@@ -94,7 +101,7 @@ class MyDDNS
         $prefix = null;
 
         foreach ($recordList as $key => $record) {
-            if ($record['Type'] === $this->type && $this->prefix === $record['RR']) {
+            if ($record['Type'] === $this->type && $record['Line'] === $this->line && $record['RR'] === $this->prefix) {
                 $prefix = $record;
             }
         }
@@ -126,7 +133,7 @@ class MyDDNS
         $prefix = null;
 
         foreach ($recordList as $key => $record) {
-            if ($record['Type'] === $this->type && $this->prefix === $record['RR']) {
+            if ($record['Type'] === $this->type && $record['Line'] === $this->line && $record['RR'] === $this->prefix) {
                 $prefix = $record;
             }
         }
@@ -140,13 +147,16 @@ class MyDDNS
 
     public function getDate() {
         date_default_timezone_set('UTC');
-
-        $date      = date('Y-m-d');
-        $H         = date('H');
-        $i         = date('i');
-        $s         = date('s');
-
-        return "{$date}T{$H}%3A{$i}%3A{$s}";
+        return date('Y-m-d\TH:i:s\Z');
+    }
+    
+    public function percentEncode($str) {
+        //使用urlencode编码后，将"+","*","%7E"做替换即满足ECS API规定的编码规范
+        $res = urlencode($str);
+        $res = preg_replace('/\+/', '%20', $res);
+        $res = preg_replace('/\*/', '%2A', $res);
+        $res = preg_replace('/%7E/', '~', $res);
+        return $res;
     }
 
     public function getSignature($CanonicalQueryString) {
@@ -154,8 +164,8 @@ class MyDDNS
         $slash                       = urlencode('/');
         $EncodedCanonicalQueryString = urlencode($CanonicalQueryString);
         $StringToSign                = "{$HTTPMethod}&{$slash}&{$EncodedCanonicalQueryString}";
-        $StringToSign                = str_replace('%40', '%2540', $StringToSign);
-        $StringToSign                = str_replace('%3A', '%253A', $StringToSign);
+        //$StringToSign                = str_replace('%40', '%2540', $StringToSign);
+        //$StringToSign                = str_replace('%3A', '%253A', $StringToSign);
         $HMAC                        = hash_hmac('sha1', $StringToSign, "{$this->accessKeySecret}&", true);
 
         return base64_encode($HMAC);
